@@ -9,7 +9,7 @@ export default function HistoryPage() {
   const [error, setError] = useState<string | null>(null);
 
   // 🔥 Backend endpoint
-  const API_URL = "https://code-review-ai-project.onrender.com/review/history";
+  const API_URL = `${process.env.NEXT_PUBLIC_API_BASE}/review/history`;
 
   const loadHistory = async () => {
     try {

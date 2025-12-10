@@ -12,7 +12,7 @@ export default function Home() {
   const [loadingHistory, setLoadingHistory] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const API_BASE = "https://code-review-ai-project.onrender.com";
+  const API_BASE = process.env.NEXT_PUBLIC_API_BASE!;
 
   const getReview = async () => {
     if (!owner || !repo || !pullNumber) {
