@@ -17,9 +17,16 @@ export default function Home() {
   // ----------------------------------
   // GitHub OAuth Login
   // ----------------------------------
-  const loginWithGithub = () => {
-    window.location.href = `${API_BASE}/auth/github`;
-  };
+const loginWithGithub = () => {
+  if (!API_BASE) {
+    alert("API Base URL not configured");
+    return;
+  }
+
+  window.location.href = `${API_BASE.replace(/\/$/, "")}/review/auth/github`;
+};
+
+
 
   // ----------------------------------
   // Fetch AI PR Review
