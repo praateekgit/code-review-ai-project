@@ -10,6 +10,7 @@ const webhook_route_1 = __importDefault(require("./routes/webhook.route"));
 const review_route_1 = __importDefault(require("./routes/review.route"));
 const config_1 = require("../utils/config");
 const db_1 = require("./db"); // <-- ADD THIS
+const auth_route_1 = __importDefault(require("./routes/auth.route"));
 (0, config_1.loadConfig)();
 (0, db_1.connectDB)(); // <-- ADD THIS
 console.log("DEBUG ENV:", process.env.GROQ_API_KEY);
@@ -24,6 +25,7 @@ app.get("/", (req, res) => {
 });
 app.use("/webhook", webhook_route_1.default);
 app.use("/review", review_route_1.default);
+app.use("/auth", auth_route_1.default);
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
     console.log(`⚡ Server running on port ${PORT}`);
