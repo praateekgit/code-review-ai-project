@@ -2,33 +2,36 @@
 
 import { useEffect } from "react";
 import { useSearchParams } from "next/navigation";
+import { Suspense } from "react";
 
-export default function GithubCallbackPage() {
+function CallbackInner() {
   const params = useSearchParams();
-
   const code = params.get("code");
-  const error = params.get("error");
 
   useEffect(() => {
     if (!code) return;
 
-    const API_BASE = process.env.NEXT_PUBLIC_API_BASE!;
-    
-    // Redirect to backend callback API
-    window.location.href = `${API_BASE}/review/auth/github/callback?code=${code}`;
+    // Hit backend callback
+    fetch(`${process.env.NEXT_PUBLIC_API_BASE}/review/auth/github/callback?code=${code}`)
+      .then((res) => res.json())
+      .then((data) => {
+        console.log("GITHUB LOGIN RESULT:", data);
+      })
+      .catch((err) => console.error("Callback error", err));
   }, [code]);
 
-  if (error) {
-    return (
-      <div className="min-h-screen flex items-center justify-center text-red-500 text-xl">
-        GitHub Login Failed: {error}
-      </div>
-    );
-  }
-
   return (
-    <div className="min-h-screen flex items-center justify-center text-white text-xl">
-      Redirecting, please wait…
+    <div className="text-white p-10 text-center">
+      <h1 className="text-3xl font-bold">⏳ Logging you in…</h1>
+      <p className="text-gray-300 mt-4">Please wait...</p>
     </div>
+  );
+}
+
+export default function GithubCallbackPage() {
+  return (
+    <Suspense fallback={<div className="text-white p-10">Loading…</div>}>
+      <CallbackInner />
+    </Suspense>
   );
 }
