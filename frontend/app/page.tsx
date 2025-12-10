@@ -18,8 +18,14 @@ export default function Home() {
   // GitHub OAuth Login
   // ----------------------------------
 const loginWithGithub = () => {
-  window.location.href = 
-    `https://github.com/login/oauth/authorize?client_id=${process.env.NEXT_PUBLIC_GITHUB_CLIENT_ID}&redirect_uri=${process.env.NEXT_PUBLIC_GITHUB_REDIRECT}`;
+  if (!API_BASE) {
+    alert("API Base URL missing");
+    return;
+  }
+
+  const cleanBase = API_BASE.replace(/\/$/, "");
+
+  window.location.href = `${cleanBase}/review/auth/github`;
 };
 
 
