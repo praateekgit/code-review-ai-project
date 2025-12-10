@@ -75,17 +75,18 @@ export const prReview = async (req: Request, res: Response) => {
 
     // STEP 3: Save to MongoDB
 const saved = await Review.create({
-    owner,
-    repo,
-    pull_number,
-    diff: diffText,
-    reviewText: aiReview
+  owner,
+  repo,
+  pull_number,
+  diff: diffText,
+  reviewText: aiReview || "No review generated"
 });
+
 
     // STEP 4: Return response
     return res.status(200).json({
       ok: true,
-      reviewId: saved?._id,
+      reviewId: saved._id.toString(),
       aiReview
     });
   } catch (err: any) {

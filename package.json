@@ -7,7 +7,6 @@
     "test": "test"
   },
   "scripts": {
-    "dev": "nodemon -r dotenv/config",
     "build": "tsc",
     "start": "node -r dotenv/config dist/api/server.js"
   },
@@ -25,9 +24,11 @@
     "openai": "^6.10.0"
   },
   "devDependencies": {
+    "@types/body-parser": "^1.19.6",
     "@types/cors": "^2.8.19",
     "@types/dotenv": "^8.2.3",
-    "@types/node": "^24.10.1",
+    "@types/express": "^5.0.6",
+    "@types/node": "^24.10.2",
     "nodemon": "^3.1.11",
     "ts-node": "^10.9.2",
     "typescript": "^5.9.3"

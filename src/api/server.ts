@@ -13,7 +13,10 @@ console.log("DEBUG ENV:", process.env.GROQ_API_KEY);
 
 const app = express();
 app.use(bodyParser.json());
-app.use(cors());
+app.use(cors({
+    origin: "*",
+    methods: ["GET", "POST"],
+}));
 
 app.get("/", (req, res) => {
   res.send("Server is running!");
