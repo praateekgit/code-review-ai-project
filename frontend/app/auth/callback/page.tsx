@@ -1,28 +1,30 @@
 "use client";
 
-import { useSearchParams } from "next/navigation";
 import { useEffect } from "react";
+import { useSearchParams } from "next/navigation";
 
 export default function CallbackPage() {
-  const params = useSearchParams();
-  const code = params.get("code");
-  const API_BASE = process.env.NEXT_PUBLIC_API_BASE!;
+  const searchParams = useSearchParams();
 
   useEffect(() => {
-    if (!code) return;
+    const code = searchParams.get("code");
 
-    fetch(`${API_BASE}/review/auth/github/callback?code=${code}`)
-      .then((res) => res.json())
-      .then((data) => {
-        console.log("Login success:", data);
-        alert("GitHub Login Successful!");
-      })
-      .catch(() => alert("Login failed"));
-  }, [code]);
+    if (!code) {
+      console.error("Missing ?code on callback URL");
+      return;
+    }
+
+    // Backend callback endpoint
+    const API_BASE = process.env.NEXT_PUBLIC_API_BASE!;
+    const url = `${API_BASE.replace(/\/$/, "")}/review/auth/github/callback?code=${code}`;
+
+    // Redirect browser to backend to finalize login
+    window.location.href = url;
+  }, [searchParams]);
 
   return (
-    <div className="text-white p-10">
-      Processing GitHub login...
-    </div>
+    <main className="min-h-screen flex items-center justify-center text-white">
+      <h1 className="text-xl">⏳ Logging you in...</h1>
+    </main>
   );
 }
