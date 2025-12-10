@@ -14,6 +14,16 @@ export default function Home() {
 
   const API_BASE = process.env.NEXT_PUBLIC_API_BASE!;
 
+  // ----------------------------------
+  // GitHub OAuth Login
+  // ----------------------------------
+  const loginWithGithub = () => {
+    window.location.href = `${API_BASE}/auth/github`;
+  };
+
+  // ----------------------------------
+  // Fetch AI PR Review
+  // ----------------------------------
   const getReview = async () => {
     if (!owner || !repo || !pullNumber) {
       setError("Please fill in all fields");
@@ -46,6 +56,9 @@ export default function Home() {
     setLoading(false);
   };
 
+  // ----------------------------------
+  // Load Review History
+  // ----------------------------------
   const loadHistory = async () => {
     setLoadingHistory(true);
     try {
@@ -68,8 +81,21 @@ export default function Home() {
           🚀 AI Pull Request Reviewer
         </h1>
 
-        {/* INPUT SECTION */}
+        {/* -------------------------- */}
+        {/* 🔐 GitHub Login Button     */}
+        {/* -------------------------- */}
+        <button
+          onClick={loginWithGithub}
+          className="w-full py-3 mb-6 rounded-lg text-lg font-semibold transition-all shadow-lg bg-purple-600 hover:bg-purple-700"
+        >
+          🔐 Login with GitHub
+        </button>
+
+        {/* -------------------------- */}
+        {/* INPUT SECTION              */}
+        {/* -------------------------- */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+
           <input
             type="text"
             placeholder="GitHub Owner"
@@ -95,7 +121,9 @@ export default function Home() {
           />
         </div>
 
-        {/* BUTTONS */}
+        {/* -------------------------- */}
+        {/* BUTTONS                    */}
+        {/* -------------------------- */}
         <div className="mt-6 space-y-4">
           <button
             onClick={getReview}
@@ -167,6 +195,7 @@ export default function Home() {
             </div>
           </div>
         )}
+
       </div>
     </main>
   );
