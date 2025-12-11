@@ -11,15 +11,11 @@ export default function CallbackHandler() {
     const token = searchParams.get("token");
 
     if (!token) {
-      console.error("❌ No token in callback URL");
-      router.replace("/");
+      console.error("❌ No token found in callback URL");
       return;
     }
 
-    console.log("✅ Received token:", token);
-
     localStorage.setItem("auth_token", token);
-
     router.replace("/");
   }, [searchParams, router]);
 
