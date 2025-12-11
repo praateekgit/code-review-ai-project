@@ -87,12 +87,12 @@ const loginWithGithub = () => {
         {/* -------------------------- */}
         {/* 🔐 GitHub Login Button     */}
         {/* -------------------------- */}
-<button
-  onClick={loginWithGithub}
-  className="bg-purple-600 px-4 py-2 rounded-lg text-white"
->
-  🔐 Login with GitHub
-</button>
+          <button
+            onClick={loginWithGithub}
+            className="bg-purple-600 px-4 py-2 rounded-lg text-white"
+          >
+            🔐 Login with GitHub
+          </button>
 
 
         {/* -------------------------- */}

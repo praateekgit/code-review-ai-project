@@ -6,10 +6,12 @@ export const loginWithGithub = (req: Request, res: Response) => {
   const clientId = process.env.GITHUB_CLIENT_ID;
   const redirectUri = process.env.GITHUB_REDIRECT_URI;
 
-  const url = `https://github.com/login/oauth/authorize?client_id=${clientId}&redirect_uri=${redirectUri}&scope=repo,user`;
-
+  const url =
+    `https://github.com/login/oauth/authorize?client_id=${clientId}&redirect_uri=${redirectUri}&scope=repo,user`;
+  console.log("DEBUG REDIRECT:", process.env.GITHUB_REDIRECT_URI);
   return res.redirect(url);
 };
+
 
 export const githubCallback = async (req: Request, res: Response) => {
   try {
