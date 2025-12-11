@@ -1,10 +1,9 @@
 "use client";
 
+export const dynamic = "force-dynamic";
+
 import { useEffect } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
-
-// 🚨 Tell Next.js that this page must be dynamic (no prerender)
-export const dynamic = "force-dynamic";
 
 export default function CallbackPage() {
   const searchParams = useSearchParams();
