@@ -39,9 +39,10 @@ export const githubCallback = async (req: Request, res: Response) => {
     );
 
     // Redirect back to frontend
-    return res.redirect(
-      `${process.env.FRONTEND_URL}/auth/callback?session=${session}`
-    );
+return res.redirect(
+  `${process.env.FRONTEND_URL}/auth/callback?token=${session}`
+);
+
 
   } catch (error) {
     console.error("OAuth error:", error);
