@@ -18,15 +18,9 @@ export default function Home() {
   // GitHub OAuth Login
   // ----------------------------------
 const loginWithGithub = () => {
-  if (!API_BASE) {
-    alert("API Base URL missing");
-    return;
-  }
-
-  const cleanBase = API_BASE.replace(/\/$/, "");
-
-  window.location.href = `${cleanBase}/review/auth/github`;
+  window.location.href = `${process.env.NEXT_PUBLIC_API_BASE}/auth/github`;
 };
+
 
 
 
@@ -93,12 +87,13 @@ const loginWithGithub = () => {
         {/* -------------------------- */}
         {/* 🔐 GitHub Login Button     */}
         {/* -------------------------- */}
-        <button
-          onClick={loginWithGithub}
-          className="w-full py-3 mb-6 rounded-lg text-lg font-semibold transition-all shadow-lg bg-purple-600 hover:bg-purple-700"
-        >
-          🔐 Login with GitHub
-        </button>
+<button
+  onClick={loginWithGithub}
+  className="bg-purple-600 px-4 py-2 rounded-lg text-white"
+>
+  🔐 Login with GitHub
+</button>
+
 
         {/* -------------------------- */}
         {/* INPUT SECTION              */}
