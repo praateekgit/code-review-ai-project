@@ -3,6 +3,9 @@
 import { useEffect } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 
+// 🚨 Tell Next.js that this page must be dynamic (no prerender)
+export const dynamic = "force-dynamic";
+
 export default function CallbackPage() {
   const searchParams = useSearchParams();
   const router = useRouter();
@@ -17,10 +20,8 @@ export default function CallbackPage() {
 
     console.log("✅ Received token:", token);
 
-    // save token
     localStorage.setItem("auth_token", token);
 
-    // Redirect to home
     router.replace("/");
   }, [searchParams, router]);
 

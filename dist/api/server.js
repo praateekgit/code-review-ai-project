@@ -25,7 +25,7 @@ app.get("/", (req, res) => {
 });
 app.use("/webhook", webhook_route_1.default);
 app.use("/review", review_route_1.default);
-app.use("/auth", auth_route_1.default);
+app.use("/", auth_route_1.default);
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
     console.log(`⚡ Server running on port ${PORT}`);
