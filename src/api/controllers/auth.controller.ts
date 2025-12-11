@@ -39,9 +39,10 @@ export const githubCallback = async (req: Request, res: Response) => {
     );
 
     // 3️⃣ Redirect user back to frontend with token
-    return res.redirect(
-      `${process.env.FRONTEND_URL}/auth-success?token=${jwtToken}`
-    );
+return res.redirect(
+  `${process.env.FRONTEND_URL}/auth/callback?token=${jwtToken}`
+);
+
 
   } catch (error: any) {
     console.error("GitHub OAuth error:", error);

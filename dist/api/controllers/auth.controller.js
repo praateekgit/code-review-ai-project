@@ -29,7 +29,7 @@ const githubCallback = async (req, res) => {
         // 2️⃣ Create JWT to store user session
         const jwtToken = jsonwebtoken_1.default.sign({ githubToken: accessToken }, process.env.JWT_SECRET, { expiresIn: "1d" });
         // 3️⃣ Redirect user back to frontend with token
-        return res.redirect(`${process.env.FRONTEND_URL}/auth-success?token=${jwtToken}`);
+        return res.redirect(`${process.env.FRONTEND_URL}/auth/callback?token=${jwtToken}`);
     }
     catch (error) {
         console.error("GitHub OAuth error:", error);
