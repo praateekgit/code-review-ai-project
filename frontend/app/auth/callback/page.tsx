@@ -3,20 +3,26 @@
 import { useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 
+// --- IMPORTANT ---
+// This disables all SSR & tells Next.js NOT to prerender this page.
+export const dynamic = "force-dynamic";
+export const runtime = "edge";
+export const revalidate = 0;
+
 export default function CallbackPage() {
-  const params = useSearchParams();
   const router = useRouter();
+  const params = useSearchParams();
 
   useEffect(() => {
     const session = params.get("session");
 
     if (!session) {
-      console.error("❌ No session token found in URL");
+      console.error("❌ No session token found");
       return;
     }
 
-    // Save JWT
-    localStorage.setItem("session_token", session);
+    // Save session token
+    localStorage.setItem("auth_token", session);
 
     // Redirect to homepage
     router.replace("/");
