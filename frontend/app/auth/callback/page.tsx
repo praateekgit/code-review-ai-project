@@ -1,31 +1,27 @@
-"use client";
-
-export const dynamic = "force-dynamic";
-export const revalidate = 0;
+"use client"; // <-- MUST be first line
 
 import { useEffect } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 
 export default function CallbackPage() {
-  const searchParams = useSearchParams();
+  const params = useSearchParams();
   const router = useRouter();
 
   useEffect(() => {
-    const token = searchParams.get("token");
+    const token = params.get("token");
 
     if (!token) {
-      console.error("❌ No token found in callback URL");
-      router.replace("/?error=no_token");
+      console.error("❌ No token received");
+      router.replace("/"); // avoid hanging page
       return;
     }
 
-    console.log("✅ OAuth token received:", token);
+    console.log("✅ Received token:", token);
 
     localStorage.setItem("auth_token", token);
 
-    // Redirect home
     router.replace("/");
-  }, [searchParams, router]);
+  }, [params, router]);
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-black text-white">
