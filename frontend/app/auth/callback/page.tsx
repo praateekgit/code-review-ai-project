@@ -1,37 +1,35 @@
 "use client";
 
 import { useEffect } from "react";
-import { useSearchParams } from "next/navigation";
-import { Suspense } from "react";
+import { useSearchParams, useRouter } from "next/navigation";
 
-function CallbackInner() {
-  const params = useSearchParams();
-  const code = params.get("code");
+export default function CallbackPage() {
+  const searchParams = useSearchParams();
+  const router = useRouter();
 
   useEffect(() => {
-    if (!code) return;
+    const token = searchParams.get("token");
 
-    // Hit backend callback
-    fetch(`${process.env.NEXT_PUBLIC_API_BASE}/review/auth/github/callback?code=${code}`)
-      .then((res) => res.json())
-      .then((data) => {
-        console.log("GITHUB LOGIN RESULT:", data);
-      })
-      .catch((err) => console.error("Callback error", err));
-  }, [code]);
+    if (!token) {
+      console.error("❌ No token in callback URL");
+      return;
+    }
+
+    console.log("✅ Received token:", token);
+
+    // save token
+    localStorage.setItem("auth_token", token);
+
+    // Redirect to home
+    router.replace("/");
+  }, [searchParams, router]);
 
   return (
-    <div className="text-white p-10 text-center">
-      <h1 className="text-3xl font-bold">⏳ Logging you in…</h1>
-      <p className="text-gray-300 mt-4">Please wait...</p>
+    <div className="min-h-screen flex items-center justify-center bg-black text-white">
+      <div className="text-center">
+        <p className="text-2xl font-bold">⏳ Logging you in…</p>
+        <p className="mt-2 opacity-70">Please wait...</p>
+      </div>
     </div>
-  );
-}
-
-export default function GithubCallbackPage() {
-  return (
-    <Suspense fallback={<div className="text-white p-10">Loading…</div>}>
-      <CallbackInner />
-    </Suspense>
   );
 }
