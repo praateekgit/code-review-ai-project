@@ -3,10 +3,6 @@
 import { useEffect } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 
-// ⛔ VERY IMPORTANT: Disable all server rendering for this page
-export const dynamic = "force-dynamic";
-export const revalidate = 0;
-
 export default function CallbackPage() {
   const searchParams = useSearchParams();
   const router = useRouter();
@@ -15,16 +11,19 @@ export default function CallbackPage() {
     const token = searchParams.get("token");
 
     if (!token) {
-      console.error("❌ No token, redirecting home");
-      router.replace("/");
+      console.error("❌ No token in callback URL");
+      router.replace("/"); 
       return;
     }
 
     console.log("✅ Received token:", token);
+
+    // Save token
     localStorage.setItem("auth_token", token);
 
+    // Redirect to homepage
     router.replace("/");
-  }, [searchParams, router]);
+  }, []);
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-black text-white">
