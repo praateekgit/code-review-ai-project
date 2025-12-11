@@ -1,27 +1,30 @@
-"use client"; // <-- MUST be first line
+"use client";
 
 import { useEffect } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 
+// ⛔ VERY IMPORTANT: Disable all server rendering for this page
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 export default function CallbackPage() {
-  const params = useSearchParams();
+  const searchParams = useSearchParams();
   const router = useRouter();
 
   useEffect(() => {
-    const token = params.get("token");
+    const token = searchParams.get("token");
 
     if (!token) {
-      console.error("❌ No token received");
-      router.replace("/"); // avoid hanging page
+      console.error("❌ No token, redirecting home");
+      router.replace("/");
       return;
     }
 
     console.log("✅ Received token:", token);
-
     localStorage.setItem("auth_token", token);
 
     router.replace("/");
-  }, [params, router]);
+  }, [searchParams, router]);
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-black text-white">
