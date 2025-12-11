@@ -25,11 +25,9 @@ app.get("/", (req, res) => {
 
 app.use("/webhook", webhookRoute);
 app.use("/review", reviewRoute);
-app.use("/auth", authRoutes);
+app.use("/", authRoutes);
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`⚡ Server running on port ${PORT}`);
 });
-
-console.log("DEBUG JWT:", process.env.JWT_SECRET);
