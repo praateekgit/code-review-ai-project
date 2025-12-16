@@ -1,29 +1,42 @@
+// src/api/controllers/auth.controller.ts
 import { Request, Response } from "express";
 import axios from "axios";
 import jwt from "jsonwebtoken";
 
 export const loginWithGithub = (req: Request, res: Response) => {
-  const clientId = process.env.GITHUB_CLIENT_ID!;
-  const redirectUri = process.env.GITHUB_REDIRECT_URI!;
+  try {
+    const clientId = process.env.GITHUB_CLIENT_ID;
+    const redirectUri = process.env.GITHUB_REDIRECT_URI || process.env.GITHUB_REDIRECT_URL;
 
-  const url = `https://github.com/login/oauth/authorize?client_id=${clientId}&redirect_uri=${encodeURIComponent(
-    redirectUri
-  )}&scope=repo,user`;
+    if (!clientId) {
+      console.error("[OAuth] missing GITHUB_CLIENT_ID");
+      return res.status(500).send("Server misconfigured: missing GITHUB_CLIENT_ID");
+    }
+    if (!redirectUri) {
+      console.error("[OAuth] missing GITHUB_REDIRECT_URI");
+      return res.status(500).send("Server misconfigured: missing GITHUB_REDIRECT_URI");
+    }
 
-  console.log("Redirecting to:", url); // DEBUG
+    const url = `https://github.com/login/oauth/authorize?client_id=${encodeURIComponent(
+      clientId
+    )}&redirect_uri=${encodeURIComponent(redirectUri)}&scope=repo,user`;
 
-  return res.redirect(url);
+    console.log("[OAuth] redirecting to GitHub:", url);
+    return res.redirect(url);
+  } catch (err) {
+    console.error("[OAuth] loginWithGithub error:", err);
+    return res.status(500).send("OAuth redirect failed");
+  }
 };
-
-
 
 export const githubCallback = async (req: Request, res: Response) => {
   try {
     const code = req.query.code as string;
+    if (!code) {
+      console.error("[OAuth] callback missing code:", req.query);
+      return res.status(400).send("Missing code");
+    }
 
-    if (!code) return res.status(400).send("Missing code");
-
-    // Exchange code → access_token
     const tokenRes = await axios.post(
       "https://github.com/login/oauth/access_token",
       {
@@ -34,42 +47,29 @@ export const githubCallback = async (req: Request, res: Response) => {
       { headers: { Accept: "application/json" } }
     );
 
-    const ghToken = tokenRes.data.access_token;
-    if (!ghToken) return res.status(400).send("GitHub auth failed");
+    const ghToken = tokenRes.data?.access_token;
+    if (!ghToken) {
+      console.error("[OAuth] no access_token in response:", tokenRes.data);
+      return res.status(400).send("GitHub auth failed");
+    }
 
-    // sign session JWT
-    const session = jwt.sign(
-      { ghToken },
-      process.env.JWT_SECRET!,
-      { expiresIn: "1d" }
-    );
+    if (!process.env.JWT_SECRET) {
+      console.error("[OAuth] missing JWT_SECRET");
+      return res.status(500).send("Server misconfigured: missing JWT_SECRET");
+    }
 
-    // Redirect back to frontend
-return res.redirect(
-  `${process.env.FRONTEND_URL}/auth/callback?token=${session}`
-);
+    const session = jwt.sign({ ghToken }, process.env.JWT_SECRET, { expiresIn: "1d" });
 
+    const frontend = process.env.FRONTEND_URL || process.env.FRONTEND || process.env.NEXT_PUBLIC_API_BASE;
+    if (!frontend) {
+      console.error("[OAuth] missing FRONTEND_URL");
+      return res.status(500).send("Server misconfigured: missing FRONTEND_URL");
+    }
 
-  } catch (error) {
-    console.error("OAuth error:", error);
-    return res.status(500).send("OAuth failed");
-  }
-};
-
-export const getUser = async (req: any, res: Response) => {
-  try {
-    const token = req.headers.authorization?.replace("Bearer ", "");
-    if (!token) return res.status(401).json({ error: "Missing token" });
-
-    const decoded: any = jwt.verify(token, process.env.JWT_SECRET!);
-    const ghToken = decoded.ghToken;
-
-    const user = await axios.get("https://api.github.com/user", {
-      headers: { Authorization: `Bearer ${ghToken}` }
-    });
-
-    return res.json({ ok: true, user: user.data });
-  } catch (err) {
-    return res.status(401).json({ error: "Invalid token" });
+    console.log("[OAuth] issuing session, redirecting back to frontend");
+    return res.redirect(`${frontend}/auth/callback?token=${encodeURIComponent(session)}`);
+  } catch (error: any) {
+    console.error("GitHub OAuth error:", error?.response?.data ?? error?.message ?? error);
+    return res.status(500).send("GitHub OAuth failed");
   }
 };
