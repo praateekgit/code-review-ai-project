@@ -1,32 +1,25 @@
+// frontend/app/auth/callback/page.tsx
 "use client";
 
 import { useEffect } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
-
-// --- IMPORTANT ---
-// This disables all SSR & tells Next.js NOT to prerender this page.
-export const dynamic = "force-dynamic";
-export const runtime = "edge";
-export const revalidate = 0;
+import { useSearchParams, useRouter } from "next/navigation";
 
 export default function CallbackPage() {
+  const searchParams = useSearchParams();
   const router = useRouter();
-  const params = useSearchParams();
 
   useEffect(() => {
-    const session = params.get("session");
-
-    if (!session) {
-      console.error("❌ No session token found");
+    const token = searchParams.get("token") || searchParams.get("session");
+    if (!token) {
+      console.error("❌ No token in callback URL");
+      router.replace("/"); // go back to home if no token
       return;
     }
 
-    // Save session token
-    localStorage.setItem("auth_token", session);
-
-    // Redirect to homepage
+    console.log("✅ Received token:", token);
+    localStorage.setItem("auth_token", token);
     router.replace("/");
-  }, [params, router]);
+  }, [searchParams, router]);
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-black text-white">
