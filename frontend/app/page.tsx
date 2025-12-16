@@ -84,20 +84,6 @@ const loginWithGithub = () => {
           🚀 AI Pull Request Reviewer
         </h1>
 
-        {/* -------------------------- */}
-        {/* 🔐 GitHub Login Button     */}
-        {/* -------------------------- */}
-          <button
-            onClick={loginWithGithub}
-            className="bg-purple-600 px-4 py-2 rounded-lg text-white"
-          >
-            🔐 Login with GitHub
-          </button>
-
-
-        {/* -------------------------- */}
-        {/* INPUT SECTION              */}
-        {/* -------------------------- */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
 
           <input

@@ -5,7 +5,6 @@ import webhookRoute from "./routes/webhook.route";
 import reviewRoute from "./routes/review.route";
 import { loadConfig } from "../utils/config";
 import { connectDB } from "./db";    // <-- ADD THIS
-import authRoutes from "./routes/auth.route";
 
 loadConfig();
 connectDB();                         // <-- ADD THIS
@@ -25,7 +24,6 @@ app.get("/", (req, res) => {
 
 app.use("/webhook", webhookRoute);
 app.use("/review", reviewRoute);
-app.use("/", authRoutes);
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
