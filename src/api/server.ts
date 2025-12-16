@@ -4,10 +4,10 @@ import cors from "cors";
 import webhookRoute from "./routes/webhook.route";
 import reviewRoute from "./routes/review.route";
 import { loadConfig } from "../utils/config";
-import { connectDB } from "./db";    // <-- ADD THIS
+import { connectDB } from "./db";
 
 loadConfig();
-connectDB();                         // <-- ADD THIS
+connectDB();                         
 
 console.log("DEBUG ENV:", process.env.GROQ_API_KEY);
 
